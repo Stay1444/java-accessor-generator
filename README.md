@@ -21,8 +21,8 @@ public class MovementPacketAccessor {
     public int X;
     public int Y;
 
-    public setX();
-    public setY();
+    public void setX();
+    public void setY();
 
     public static MovementPacketAccessor access(Object object);
 }
