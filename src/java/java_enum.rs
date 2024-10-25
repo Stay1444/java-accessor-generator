@@ -36,7 +36,8 @@ impl Enum {
             write!(output, "{}", lines.join("\n")).unwrap();
         }
 
-        write!(output, "\npublic enum {} {{\n", self.name).unwrap();
+        writeln!(output, "\n\n@SuppressWarnings(\"all\")").unwrap();
+        writeln!(output, "public enum {} {{", self.name).unwrap();
 
         let variants = self
             .variants

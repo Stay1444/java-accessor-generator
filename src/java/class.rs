@@ -48,7 +48,8 @@ impl Class {
             write!(output, "{}", lines.join("\n")).unwrap();
         }
 
-        write!(output, "\npublic ").unwrap();
+        writeln!(output, "\n\n@SuppressWarnings(\"all\")").unwrap();
+        write!(output, "public ").unwrap();
         if self.is_virtual {
             write!(output, "virtual ").unwrap();
         }
@@ -74,8 +75,6 @@ impl Class {
         }
 
         if !self.methods.is_empty() {
-            writeln!(output).unwrap();
-
             for method in &self.methods {
                 write!(output, "\n\t{}", method.visibility).unwrap();
                 if method.is_static {
