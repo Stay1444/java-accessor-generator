@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Default, Debug, Clone, Copy)]
 pub enum Visibility {
     #[default]
@@ -5,12 +7,11 @@ pub enum Visibility {
     Private,
 }
 
-impl Visibility {
-    pub fn to_string(self) -> String {
+impl Display for Visibility {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Visibility::Public => "public",
-            Visibility::Private => "private",
+            Visibility::Public => write!(f, "public"),
+            Visibility::Private => write!(f, "private"),
         }
-        .to_owned()
     }
 }

@@ -8,7 +8,7 @@ use crate::{java, Object};
 
 mod constructs;
 
-const ALLOWED_EXTENSIONS: &[&'static str] = &["ron"];
+const ALLOWED_EXTENSIONS: &[&str] = &["ron"];
 
 #[derive(Debug)]
 pub struct JavaSource {
@@ -59,7 +59,7 @@ pub fn compile(
         // If the file is another directory, call the compile function
         // recursively with that directory as the target, and the directory name as the output
         if path.is_dir() {
-            let mut output = output.clone().unwrap_or(PathBuf::new());
+            let mut output = output.clone().unwrap_or_default();
             let dir_name = path.file_name().expect("dir_name");
             output.push(dir_name);
 
@@ -130,12 +130,12 @@ fn compile_file(
 
     let is_enum = !current.variants.is_empty();
 
-    let output = output.join(format!("{}Accessor.java", current.name));
+    let output = output.join(format!("{}Accessor.java", current.display_name()));
 
     let includes: Vec<Object> = current
         .includes
         .iter()
-        .map(|x| resolve_include(&target_parent, x))
+        .map(|x| resolve_include(target_parent, x))
         .collect::<Result<Vec<Object>, SourceError>>()?;
 
     let source = if is_enum {

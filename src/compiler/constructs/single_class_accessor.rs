@@ -80,7 +80,7 @@ pub fn generate(object: &Object) -> java::Method {
                             .replace("{{FIELD_NAME}}", field.display_name())
                             .replace(
                                 "{{ACCESSOR}}",
-                                &field.field_type.generate_accessor(true, &object),
+                                &field.field_type.generate_accessor(true, object),
                             )
                             .to_string()
                     })

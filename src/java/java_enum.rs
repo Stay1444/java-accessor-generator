@@ -21,17 +21,17 @@ impl Enum {
         use std::fmt::Write;
         let mut output = String::new();
 
-        write!(output, "package {};\n", self.package).unwrap();
+        writeln!(output, "package {};", self.package).unwrap();
 
         if !self.includes.is_empty() {
-            write!(output, "\n").unwrap();
+            writeln!(output).unwrap();
             for include in &self.includes {
-                write!(output, "import {};\n", include).unwrap();
+                writeln!(output, "import {};", include).unwrap();
             }
         }
 
         if let Some(comment) = &self.comment {
-            write!(output, "\n").unwrap();
+            writeln!(output).unwrap();
             let lines: Vec<String> = comment.lines().map(|x| format!("// {x}")).collect();
             write!(output, "{}", lines.join("\n")).unwrap();
         }
@@ -45,13 +45,13 @@ impl Enum {
             .collect::<Vec<String>>()
             .join(",\n");
 
-        write!(output, "{variants};\n").unwrap();
+        writeln!(output, "{variants};").unwrap();
 
         if !self.methods.is_empty() {
-            write!(output, "\n").unwrap();
+            writeln!(output).unwrap();
 
             for method in &self.methods {
-                write!(output, "\n\t{}", method.visibility.to_string()).unwrap();
+                write!(output, "\n\t{}", method.visibility).unwrap();
                 if method.is_static {
                     write!(output, " static").unwrap();
                 }

@@ -107,7 +107,7 @@ impl Type {
             Type::Object(name) => format!("{name}Accessor.access(value)"),
             Type::SelfObject => format!("{}Accessor.access(value)", object.name),
             Type::Array(array) => format!("{}[]", array.generate_accessor(false, object)),
-            other => format!("{}", other.java_name(object)),
+            other => other.java_name(object).to_string(),
         };
 
         if root && self.ends_in_object(object).is_none() {
@@ -260,7 +260,7 @@ fn format(dir: &Path) -> anyhow::Result<(i32, i32)> {
                 "{}: {} {}",
                 "ERROR".red(),
                 path.display(),
-                current.unwrap_err().to_string()
+                current.unwrap_err()
             );
             errors += 1;
             continue;

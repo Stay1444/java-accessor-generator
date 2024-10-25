@@ -22,7 +22,7 @@ pub fn generate(fields: &[crate::Field], object: &Object) -> Vec<java::Method> {
                 .name(format!("set_{}", field.display_name()))
                 .arguments(vec![java::Argument::builder()
                     .name("value")
-                    .type_name(field.field_type.java_name(&object))
+                    .type_name(field.field_type.java_name(object))
                     .build()])
                 .body(
                     BODY.replace(
