@@ -18,10 +18,10 @@ pub struct JavaSource {
 
 #[derive(Error, Debug)]
 pub enum SourceError {
-    #[error("An IO error ocurred while reading a source file or directory")]
+    #[error("An IO error ocurred while reading a source file or directory: {0}")]
     IO(std::io::Error),
 
-    #[error("An error ocurred while deserializing the file")]
+    #[error("An error ocurred while deserializing the file: {0}")]
     Deserialization(SpannedError),
 
     #[error("Object had both fields and variants, the type between enum or class could not be determined.")]
@@ -34,14 +34,14 @@ pub enum SourceError {
 pub fn compile(
     target: impl Into<PathBuf>,
     output: Option<impl Into<PathBuf>>,
-) -> Result<Vec<JavaSource>, Vec<SourceError>> {
+) -> Result<Vec<JavaSource>, Vec<(PathBuf, SourceError)>> {
     let target = target.into();
     let output: Option<PathBuf> = output.map(Into::into);
 
     let read_dir = match target.read_dir() {
         Ok(x) => x,
         Err(err) => {
-            return Err(vec![SourceError::IO(err)]);
+            return Err(vec![(target, SourceError::IO(err))]);
         }
     };
 
@@ -51,7 +51,7 @@ pub fn compile(
     // Iterate over every file in the target directory
     for path in read_dir {
         if let Err(err) = path {
-            failed.push(SourceError::IO(err));
+            failed.push((PathBuf::new(), SourceError::IO(err)));
             continue;
         };
         let path = path.unwrap().path();
@@ -88,12 +88,12 @@ pub fn compile(
         }
 
         match compile_file()
-            .target(path)
+            .target(&path)
             .maybe_output(output.as_ref())
             .call()
         {
             Ok(x) => completed.push(x),
-            Err(x) => failed.push(x),
+            Err(x) => failed.push((path, x)),
         }
     }
 

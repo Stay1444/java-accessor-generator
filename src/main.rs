@@ -226,7 +226,7 @@ fn main() -> anyhow::Result<()> {
             }
             Err(errors) => {
                 for error in errors {
-                    println!("{}", error);
+                    println!("{}: {}", error.0.display(), error.1);
                 }
             }
         },
